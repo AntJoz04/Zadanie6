@@ -101,6 +101,18 @@ namespace Zadanie6.Controllers
             roombyid.isActive= updateRoomDTO.IsActive;
             return  Ok(roombyid);
         }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var room = rooms.FirstOrDefault(r=> r.Id == id);
+            if (room == null)
+            {
+                return NotFound();
+            }
+            rooms.Remove(room);
+            return NoContent();
+        }
         
         
         
