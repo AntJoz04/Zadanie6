@@ -2,12 +2,12 @@ namespace Zadanie6.Models;
 
 public class Reservation
 {
-    int Id { get; set; }
-    int RoomId { get; set; }
-    string OrganizerName { get; set; }
-    string Topic { get; set; }
-    DateTime Date { get; set; }
-    DateTime StartTime { get; set; }
-    DateTime EndTime { get; set; }
-    string Status { get; set; }
+    public int Id { get; set; }
+    public int RoomId { get; set; }
+    public string OrganizerName { get; set; }
+    public string Topic { get; set; }
+    public DateTime Date { get; set; }
+    public DateTime StartTime { get; set; }
+    public DateTime EndTime { get; set; }
+    public string Status { get; set; }
 }
