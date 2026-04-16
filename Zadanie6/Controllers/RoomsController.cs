@@ -18,14 +18,35 @@ namespace Zadanie6.Controllers
             new Room() { Id = 4, Name = "room4", Capacity = 15, BuildingCode = "B", Floor = 1, HasProjector = true ,isActive = true}
         };
         // GET /api/rooms
-        [HttpGet]
-        public IActionResult Get([FromQuery]int? minCapacity=0)
-        {
-           //200 ok
-           return Ok(rooms.Where(r => r.Capacity >= minCapacity));
-        }
+       
+       
         // GET /api/rooms/{id}
         //get /api/rooms/3
+        [HttpGet]
+        public IActionResult GetFromlotsQuery([FromQuery] int? minCapacity, [FromQuery] bool? hasProjector, [FromQuery] bool? activeOnly)
+        {
+            var query = rooms.AsQueryable();
+
+            if (minCapacity != null)
+            {
+                query = query.Where(r => r.Capacity >= minCapacity);
+            }
+
+            if (hasProjector != null)
+            {
+                query = query.Where(r => r.HasProjector == hasProjector.Value);
+            }
+
+            if (activeOnly != null)
+            {
+                if (activeOnly.Value)
+                {
+                    query = query.Where(r => r.isActive == activeOnly.Value);
+                }
+            }
+
+            return Ok(query);
+        }
         [Route("{id}")]
         [HttpGet]
         public IActionResult GetById(int id)
@@ -63,6 +84,12 @@ namespace Zadanie6.Controllers
             //201
             return CreatedAtAction(nameof(GetById), new { id = room.Id }, room);
         }
+
+        // [HttpPut]
+        // public IActionResult Put()
+        // {
+        //     
+        // }
         
         
         
