@@ -67,10 +67,42 @@ namespace Zadanie6.Controllers
             }
         };
 
-        [HttpGet]
-        public ActionResult<IEnumerable<Reservation>> Get()
+        
+
+        [HttpGet("{id}")]
+        public ActionResult<Reservation> GetFromID(int id)
         {
-            return Ok(reservations);
+            var res = reservations.FirstOrDefault(r => r.Id == id);
+            if (res == null)
+            {
+                return NotFound();
+            }
+
+            return Ok(res);
         }
+
+        [HttpGet]
+        public IActionResult GetFromQuery([FromQuery] DateTime? date, [FromQuery] string? status, [FromQuery] int? roomId)
+        {
+            var query = reservations.AsQueryable();
+            if (date != null)
+            {
+                query = query.Where(r => r.Date == date);
+            }
+
+            if (status != null)
+            {
+                query = query.Where(r => r.Status == status);
+            }
+
+            if (roomId != null)
+            {
+                query = query.Where(r => r.RoomId == roomId);
+            }
+            return Ok(query);
+        }
+        
+        // [HttpPost]
+        // public IActionResult Post([FromBody] )
     }
 }
