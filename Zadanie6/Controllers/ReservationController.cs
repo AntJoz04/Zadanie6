@@ -11,7 +11,7 @@ namespace Zadanie6.Controllers
     {
         public static List<Reservation> reservations = new List<Reservation>()
         {
-            new Reservation() 
+            new Reservation()
             {
                 Id = 1,
                 RoomId = 1,
@@ -65,10 +65,11 @@ namespace Zadanie6.Controllers
                 StartTime = new DateTime(2026, 5, 10, 13, 0, 0),
                 EndTime = new DateTime(2026, 5, 10, 15, 0, 0),
                 Status = "confirmed"
-            }
+            },
+
         };
 
-        
+
 
         [HttpGet("{id}")]
         public ActionResult<Reservation> GetFromID(int id)
@@ -83,7 +84,8 @@ namespace Zadanie6.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetFromQuery([FromQuery] DateTime? date, [FromQuery] string? status, [FromQuery] int? roomId)
+        public IActionResult GetFromQuery([FromQuery] DateTime? date, [FromQuery] string? status,
+            [FromQuery] int? roomId)
         {
             var query = reservations.AsQueryable();
             if (date != null)
@@ -100,6 +102,7 @@ namespace Zadanie6.Controllers
             {
                 query = query.Where(r => r.RoomId == roomId);
             }
+
             return Ok(query);
         }
 
@@ -121,10 +124,45 @@ namespace Zadanie6.Controllers
             {
                 return BadRequest();
             }
+
             reservations.Add(reserv);
             return CreatedAtAction(nameof(GetFromID), new { id = reserv.Id }, reserv);
-            
+
         }
-        
-    }
+
+        [HttpPut("{id}")]
+        public IActionResult Put(int id, [FromBody] UpdateReservationDTO dto)
+        {
+            var reservationById = reservations.FirstOrDefault(r=>r.Id == id);
+            if (reservationById == null)
+            {
+                return NotFound();
+            }
+
+            if (dto.StartTime > dto.EndTime)
+            {
+                return BadRequest();
+            }
+            reservationById.EndTime = dto.EndTime;
+            reservationById.StartTime = dto.StartTime;
+            reservationById.OrganizerName = dto.OrganizerName;
+            reservationById.Topic = dto.Topic;
+            reservationById.Date=dto.Date;
+            reservationById.Status=dto.Status;
+            return Ok(reservationById);
+        }
+
+        [HttpDelete("{id}")]
+        public IActionResult Delete(int id)
+        {
+            var res = reservations.FirstOrDefault(r=>r.Id == id);
+            if (res == null)
+            {
+                return NotFound();
+            }
+            reservations.Remove(res);
+            return NoContent();
+        }
+
+}
 }
