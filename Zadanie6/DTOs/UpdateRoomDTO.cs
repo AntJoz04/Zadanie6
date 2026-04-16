@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Zadanie6.DTOs;
 
-public class CreateRoomDTO
+public class UpdateRoomDTO
 {
     [Required]
     [StringLength(100)]
