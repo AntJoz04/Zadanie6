@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Zadanie6.DTOs;
 using Zadanie6.Models;
 
 namespace Zadanie6.Controllers
@@ -101,8 +102,29 @@ namespace Zadanie6.Controllers
             }
             return Ok(query);
         }
+
+        [HttpPost]
+        public IActionResult Post([FromBody] CreateReservationDTO dto)
+        {
+            var reserv = new Reservation()
+            {
+                Id = reservations.Count + 1,
+                RoomId = dto.RoomId,
+                OrganizerName = dto.OrganizerName,
+                Topic = dto.Topic,
+                Date = dto.Date,
+                StartTime = dto.StartTime,
+                EndTime = dto.EndTime,
+
+            };
+            if (dto.EndTime < dto.StartTime)
+            {
+                return BadRequest();
+            }
+            reservations.Add(reserv);
+            return CreatedAtAction(nameof(GetFromID), new { id = reserv.Id }, reserv);
+            
+        }
         
-        // [HttpPost]
-        // public IActionResult Post([FromBody] )
     }
 }
