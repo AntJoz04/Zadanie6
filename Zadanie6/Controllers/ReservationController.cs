@@ -66,5 +66,11 @@ namespace Zadanie6.Controllers
                 Status = "confirmed"
             }
         };
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Reservation>> Get()
+        {
+            return Ok(reservations);
+        }
     }
 }
