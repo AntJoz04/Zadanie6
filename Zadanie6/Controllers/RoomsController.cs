@@ -85,11 +85,22 @@ namespace Zadanie6.Controllers
             return CreatedAtAction(nameof(GetById), new { id = room.Id }, room);
         }
 
-        // [HttpPut]
-        // public IActionResult Put()
-        // {
-        //     
-        // }
+        [HttpPut("{id}")]
+        public IActionResult Put(int id,[FromBody] UpdateRoomDTO updateRoomDTO)
+        {
+            var roombyid =  rooms.FirstOrDefault(r => r.Id == id);
+            if (roombyid == null)
+            {
+                return NotFound();
+            }
+            roombyid.Name = updateRoomDTO.Name;
+            roombyid.BuildingCode = updateRoomDTO.BuildingCode;
+            roombyid.Floor = updateRoomDTO.Floor;
+            roombyid.Capacity = updateRoomDTO.Capacity;
+            roombyid.HasProjector = updateRoomDTO.HasProjector;
+            roombyid.isActive= updateRoomDTO.IsActive;
+            return  Ok(roombyid);
+        }
         
         
         
