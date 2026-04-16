@@ -109,6 +109,22 @@ namespace Zadanie6.Controllers
         [HttpPost]
         public IActionResult Post([FromBody] CreateReservationDTO dto)
         {
+            if (dto.EndTime < dto.StartTime)
+            {
+                return BadRequest();
+            }
+            var conflict = reservations.Any(r=> r.RoomId ==dto.RoomId && r.Date.Date == dto.Date.Date && (dto.StartTime <r.EndTime && dto.EndTime>r.StartTime));
+            var roomexists = RoomsController.rooms.Any(r=>r.Id == dto.RoomId);
+            var isitactive = RoomsController.rooms.Any(r=>r.Id == dto.RoomId && r.isActive);
+            if (!roomexists || !isitactive)
+            {
+                return NotFound();
+            }
+            
+            if (conflict)
+            {
+                return Conflict();
+            }
             var reserv = new Reservation()
             {
                 Id = reservations.Count + 1,
@@ -118,12 +134,9 @@ namespace Zadanie6.Controllers
                 Date = dto.Date,
                 StartTime = dto.StartTime,
                 EndTime = dto.EndTime,
-
+                Status = "planned"
             };
-            if (dto.EndTime < dto.StartTime)
-            {
-                return BadRequest();
-            }
+           
 
             reservations.Add(reserv);
             return CreatedAtAction(nameof(GetFromID), new { id = reserv.Id }, reserv);
@@ -151,6 +164,7 @@ namespace Zadanie6.Controllers
             reservationById.Status=dto.Status;
             return Ok(reservationById);
         }
+        
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)

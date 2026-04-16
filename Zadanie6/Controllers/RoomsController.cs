@@ -110,6 +110,11 @@ namespace Zadanie6.Controllers
             {
                 return NotFound();
             }
+            var hasRes = ReservationController.reservations.Any(r => r.RoomId==id);
+            if (hasRes)
+            {
+                return Conflict();
+            }
             rooms.Remove(room);
             return NoContent();
         }
